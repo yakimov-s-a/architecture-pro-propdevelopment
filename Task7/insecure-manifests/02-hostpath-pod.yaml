@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-host-path
+  namespace: audit-zone
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - mountPath: /var/data
+          name: host-data
+  volumes:
+    - name: host-data
+      hostPath:
+        path: /var/data
+        type: DirectoryOrCreate
