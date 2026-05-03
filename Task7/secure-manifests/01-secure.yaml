@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-secure-non-privileged
+  namespace: audit-zone
+spec:
+  containers:
+    - name: nginx
+      image: nginxinc/nginx-unprivileged
+      volumeMounts:
+        - name: nginx-cache
+          mountPath: /var/cache/nginx
+        - name: nginx-pid
+          mountPath: /var/run
+        - name: nginx-tmp
+          mountPath: /tmp
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  volumes:
+    - name: nginx-cache
+      emptyDir: { }
+    - name: nginx-pid
+      emptyDir: { }
+    - name: nginx-tmp
+      emptyDir: { }
